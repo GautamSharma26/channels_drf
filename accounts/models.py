@@ -20,6 +20,23 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_delivery_boy(self, email, password=None, password2=None, **other_fields):
+        """
+        Creates and saves a User with the given email,password and extra fields which are given User model.
+        """
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        user = self.model(
+            email=self.normalize_email(email),
+            **other_fields
+        )
+
+        user.set_password(password)
+        user.is_delivery_boy = True
+        user.save(using=self._db)
+        return user
+
     def create_superuser(self, email, password=None, password2=None, **other_fields):
         """
         Creates and saves a superuser with the given email,phone_no(required fields),and password.
@@ -53,6 +70,7 @@ class User(AbstractBaseUser):
     phone_no = PhoneNumberField(null=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_delivery_boy = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

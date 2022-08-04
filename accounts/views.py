@@ -4,12 +4,11 @@ from rest_framework import status, viewsets
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from .permissions import IsOwner
 from django_rest_passwordreset.views import (ResetPasswordRequestToken, ResetPasswordConfirm,
                                              ResetPasswordValidateToken)
 from .models import User
 from accounts.serializer import (UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer,
-                                 UserChangePasswordSerializer)
+                                 UserChangePasswordSerializer, DeliverBoyRegistrationSerializer)
 
 
 # generating custom token
@@ -36,6 +35,20 @@ class UserRegistration(APIView):
 
     def post(self, request, format=None):
         serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            token = get_tokens_for_user(user)
+            return Response({"token": token, "msg": "done"}, status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeliveryBoyRegistration(APIView):
+    """
+    User Registration view.
+    """
+
+    def post(self, request, format=None):
+        serializer = DeliverBoyRegistrationSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             token = get_tokens_for_user(user)
