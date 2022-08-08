@@ -1,55 +1,85 @@
+from django.contrib.auth.password_validation import validate_password, get_password_validators
 from django.db import models
+from .manager import UserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.core.exceptions import ValidationError
+from rest_framework import exceptions
+
+from pizza import settings
 
 
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, password2=None, **other_fields):
-        """
-        Creates and saves a User with the given email,password and extra fields which are given User model.
-        """
-        if not email:
-            raise ValueError('Users must have an email address')
+# class UserManager(BaseUserManager):
+#     def create_user(self, email, password=None, password2=None, **other_fields):
+#         """
+#         Creates and saves a User with the given email,password and extra fields which are given User model.
+#         """
+#         if not email:
+#             raise ValueError('Users must have an email address')
+#
+#         user = self.model(
+#             email=self.normalize_email(email),
+#             **other_fields
+#         )
+#         try:
+#             # validate the password against existing validators
+#             validate_password(
+#                 password,
+#                 password_validators=get_password_validators(settings.AUTH_PASSWORD_VALIDATORS)
+#             )
+#         except ValidationError as e:
+#             # raise a validation error
+#             raise exceptions.ValidationError({
+#                 'password': e.messages
+#             })
+#
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
 
-        user = self.model(
-            email=self.normalize_email(email),
-            **other_fields
-        )
 
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+# def create_delivery_boy(self, email, password=None, password2=None, **other_fields):
+#     """
+#     Creates and saves a User with the given email,password and extra fields which are given User model.
+#     """
+#     if not email:
+#         raise ValueError('Users must have an email address')
+#
+#     user = self.model(
+#         email=self.normalize_email(email),
+#         **other_fields
+#     )
+#
+#     try:
+#         # validate the password against existing validators
+#         validate_password(
+#             password,
+#             password_validators=get_password_validators(settings.AUTH_PASSWORD_VALIDATORS)
+#         )
+#     except ValidationError as e:
+#         # raise a validation error
+#         raise exceptions.ValidationError({
+#             'password': e.messages
+#         })
+#
+#     user.set_password(password)
+#     user.is_delivery_boy = True
+#     user.save(using=self._db)
+#     return user
 
-    def create_delivery_boy(self, email, password=None, password2=None, **other_fields):
-        """
-        Creates and saves a User with the given email,password and extra fields which are given User model.
-        """
-        if not email:
-            raise ValueError('Users must have an email address')
-
-        user = self.model(
-            email=self.normalize_email(email),
-            **other_fields
-        )
-
-        user.set_password(password)
-        user.is_delivery_boy = True
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password=None, password2=None, **other_fields):
-        """
-        Creates and saves a superuser with the given email,phone_no(required fields),and password.
-        """
-        user = self.create_user(
-            email,
-            password=password,
-            **other_fields
-
-        )
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
+# def create_superuser(self, email, password=None, password2=None, **other_fields):
+#     """
+#     Creates and saves a superuser with the given email,phone_no(required fields),and password.
+#     """
+#     user = self.create_user(
+#         email,
+#         password=password,
+#         **other_fields
+#
+#     )
+#     user.is_admin = True
+#     user.save(using=self._db)
+#     return user
 
 
 # Create your models here.
@@ -67,7 +97,7 @@ class User(AbstractBaseUser):
     '''
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    phone_no = PhoneNumberField(null=True)
+    phone_no = PhoneNumberField(null=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_delivery_boy = models.BooleanField(default=False)
@@ -97,5 +127,3 @@ class User(AbstractBaseUser):
         # "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
-
-

@@ -8,7 +8,7 @@ from django_rest_passwordreset.views import (ResetPasswordRequestToken, ResetPas
                                              ResetPasswordValidateToken)
 from .models import User
 from accounts.serializer import (UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer,
-                                 UserChangePasswordSerializer, DeliverBoyRegistrationSerializer)
+                                 UserChangePasswordSerializer)
 
 
 # generating custom token
@@ -42,19 +42,19 @@ class UserRegistration(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DeliveryBoyRegistration(APIView):
-    """
-    User Registration view.
-    """
-
-    def post(self, request, format=None):
-        serializer = DeliverBoyRegistrationSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            token = get_tokens_for_user(user)
-            return Response({"token": token, "msg": "done"}, status=status.HTTP_202_ACCEPTED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+# class DeliveryBoyRegistration(APIView):
+#     """
+#     User Registration view.
+#     """
+#
+#     def post(self, request, format=None):
+#         serializer = DeliverBoyRegistrationSerializer(data=request.data)
+#         if serializer.is_valid(raise_exception=True):
+#             user = serializer.save()
+#             token = get_tokens_for_user(user)
+#             return Response({"token": token, "msg": "done"}, status=status.HTTP_202_ACCEPTED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
 
 class UserLogin(APIView):
     """

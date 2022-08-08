@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
     'accounts',
     'pizza',
+    'pizza_order',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +79,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pizza.wsgi.application'
-ASGI_APPLICATION = 'pizza.wsgi.application'
+ASGI_APPLICATION = 'pizza.asgi.application'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_USE_TLS = True
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
