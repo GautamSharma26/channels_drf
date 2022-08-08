@@ -34,7 +34,8 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
-    price = models.IntegerField(null=False)
+    quantity = models.IntegerField(default=1, null=False)
+    price = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.user} {self.pizza}"
@@ -63,8 +64,6 @@ Status_Choice = (
 class Order(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    quantity = models.IntegerField(null=False)
-    total_amount = models.IntegerField(default=1)
     status = models.CharField(max_length=20, choices=Status_Choice, default='Order Received')
     date = models.DateTimeField(auto_now_add=True)
 

@@ -34,35 +34,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    # def create_delivery_boy(self, email, password=None, password2=None, **other_fields):
-    #     """
-    #     Creates and saves a User with the given email,password and extra fields which are given User model.
-    #     """
-    #     if not email:
-    #         raise ValueError('Users must have an email address')
-    #
-    #     user = self.model(
-    #         email=self.normalize_email(email),
-    #         **other_fields
-    #     )
-    #
-    #     try:
-    #         # validate the password against existing validators
-    #         validate_password(
-    #             password,
-    #             password_validators=get_password_validators(settings.AUTH_PASSWORD_VALIDATORS)
-    #         )
-    #     except ValidationError as e:
-    #         # raise a validation error
-    #         raise exceptions.ValidationError({
-    #             'password': e.messages
-    #         })
-    #
-    #     user.set_password(password)
-    #     user.is_delivery_boy = True
-    #     user.save(using=self._db)
-    #     return user
-
     def create_superuser(self, email, password=None, password2=None, **other_fields):
         """
         Creates and saves a superuser with the given email,phone_no(required fields),and password.

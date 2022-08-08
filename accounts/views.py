@@ -42,20 +42,6 @@ class UserRegistration(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class DeliveryBoyRegistration(APIView):
-#     """
-#     User Registration view.
-#     """
-#
-#     def post(self, request, format=None):
-#         serializer = DeliverBoyRegistrationSerializer(data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             user = serializer.save()
-#             token = get_tokens_for_user(user)
-#             return Response({"token": token, "msg": "done"}, status=status.HTTP_202_ACCEPTED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#
-
 class UserLogin(APIView):
     """
     User login view.
@@ -103,16 +89,11 @@ class UserProfile(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
 
 
-"""
-Overriding of ResetPassword class to customize message part".
-
-ResetPassword class works in three steps(token passing, token validation, token confirmation)
-"""
-
-
 class ResetPasswordConfirmView(ResetPasswordConfirm):
     """
-    this is a customized part of ResetPasswordConfirm class.
+    Overriding of ResetPassword class to customize message part".
+
+    ResetPassword class works in three steps(token passing, token validation, token confirmation)
     """
 
     def post(self, request, *args, **kwargs):
