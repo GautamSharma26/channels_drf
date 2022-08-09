@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 from pizza.settings import EMAIL_HOST_USER
 
 
-@receiver(post_save, sender=CartItem)
+@receiver(post_save, sender=Cart)
 def total_amount_add(instance, created, **kwargs):
     if created:
         cart = Cart.objects.get(user=instance.user, is_ordered=False)

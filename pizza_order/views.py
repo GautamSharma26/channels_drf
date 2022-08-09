@@ -64,26 +64,6 @@ class AddressCreate(viewsets.ModelViewSet):
         return Response({'error': serializer.errors})
 
 
-class CartItemCreate(viewsets.ModelViewSet):
-    permission_classes = IsAuthenticated
-    serializer_class = CartItemSerializer
-    lookup_field = 'pk'
-
-    def create(self, request, *args, **kwargs):
-        user = request.user
-        data = request.data
-        cart, _ = Cart.objects.get_or_create(user=user, is_ordered=False)
-        product = Pizza.objects.get(id=data.get('pizza'))
-        if product:
-            price = product.price
-            quantity = data.get('quantity')
-            if quantity:
-                CartItem.objects.create(user=user, cart=cart, pizza=product, price=price, quantity=quantity)
-                return Response({'message': 'CartItem is created.'})
-            return Response({'message': 'Enter Quantity first'})
-        return Response({'message': 'No Pizza is available of this ID'})
-
-
 class CartView(viewsets.ModelViewSet):
     serializer_class = CartSerializer
     permission_classes = IsOwner
