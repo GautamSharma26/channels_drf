@@ -1,15 +1,18 @@
 from django.core.mail import send_mail
+from pizza.settings import EMAIL_HOST_USER
 
 
-def mail_send(email_plaintext_message, reset_password_token):
+def mail_send(message, token, title):
     send_mail(
         # from here a token is sending to mail which is assigned to that user.
-        # title:
-        "Password Reset for {title}".format(title="Pizza Delivery"),
+        # "Password Reset for {title}".format(title="Pizza app"),
+        subject=title,
         # message:
-        email_plaintext_message,
+        message=message,
         # from:
-        "noreply@somehost.local",
+        # from_email="noreply@somehost.local",
+        from_email=EMAIL_HOST_USER,
         # to:
-        [reset_password_token.user.email]
+        recipient_list=[token.user.email],
+        # fail_silently=True
     )

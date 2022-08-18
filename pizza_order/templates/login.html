@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <div class="container py-5">
+  <h1>Login</h1>
+  <form method="POST">
+    {% csrf_token %}
+      <input type="text" name="email">
+      <input type="text" name="password">
+    <button class="btn btn-primary" type="submit">Login</button>
+  </form>
+</div>
+</body>
+</html>

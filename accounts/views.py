@@ -9,6 +9,7 @@ from django_rest_passwordreset.views import (ResetPasswordRequestToken, ResetPas
 from .models import User
 from accounts.serializer import (UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer,
                                  UserChangePasswordSerializer)
+from pizza.message import *
 
 
 # generating custom token
@@ -56,7 +57,7 @@ class UserLogin(APIView):
             user = authenticate(email=email, password=password)
             if user:
                 token = get_tokens_for_user(user)
-                return Response({'token': token, 'msg': 'Login Success'}, status=status.HTTP_200_OK)
+                return Response({'token': token}, status=status.HTTP_200_OK)
             else:
                 return Response({'errors': {'non_field_errors': ['Email or password is not valid']}},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -75,7 +76,7 @@ class UserChangePasswordView(APIView):
     def post(self, request, format=None):
         serializer = UserChangePasswordSerializer(data=request.data, context={'user': request.user})
         if serializer.is_valid(raise_exception=True):
-            return Response({'msg': 'Password changed successfully'}, status=status.HTTP_200_OK)
+            return Response({password_changed}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -98,7 +99,7 @@ class ResetPasswordConfirmView(ResetPasswordConfirm):
 
     def post(self, request, *args, **kwargs):
         super(ResetPasswordConfirmView, self).post(request, *args, **kwargs)
-        return Response({'status': 'OK', 'message': ' Password Reset Successfully'})
+        return Response({password_reset_success})
 
 
 class ResetPasswordValidateView(ResetPasswordValidateToken):
@@ -108,7 +109,7 @@ class ResetPasswordValidateView(ResetPasswordValidateToken):
 
     def post(self, request, *args, **kwargs):
         super(ResetPasswordValidateView, self).post(request, *args, **kwargs)
-        return Response({'status': 'OK', 'message': ' Token validation succeed'})
+        return Response({token_validation_success})
 
 
 class ResetPasswordTokenView(ResetPasswordRequestToken):
@@ -118,7 +119,7 @@ class ResetPasswordTokenView(ResetPasswordRequestToken):
 
     def post(self, request, *args, **kwargs):
         super(ResetPasswordTokenView, self).post(request, *args, **kwargs)
-        return Response({'status': 'OK', 'message': ' Token Passed successfully'})
+        return Response({token_passed_successfully})
 
 
 

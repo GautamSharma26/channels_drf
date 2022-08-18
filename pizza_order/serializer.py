@@ -25,13 +25,23 @@ class AddressWriteSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    pizza = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
+
     class Meta:
         model = Cart
         fields = '__all__'
 
 
+class CartPizzaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartPizza
+        fields = ['id', 'quantity']
+
+
 class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.CharField(default=serializers.CurrentUserDefault())
+    total_amount = serializers.IntegerField()
+
     class Meta:
         model = Order
         fields = '__all__'
-

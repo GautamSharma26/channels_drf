@@ -51,9 +51,7 @@ class Migration(migrations.Migration):
             name='Cart',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.IntegerField()),
-                ('total_amount', models.IntegerField(default=0)),
-                ('product', models.ManyToManyField(to='pizza_order.Pizza')),
+                ('pizza', models.ManyToManyField(to='pizza_order.Pizza')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
