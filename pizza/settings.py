@@ -155,6 +155,9 @@ MEDIA_URL = '/images/'
 
 STATIC_URL = '/static/'
 
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -165,3 +168,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
+
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PB_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SC_KEY')
+STRIPE_WEBHOOK_SECRET = os.environ.get('WEBHOOK_KEY')
+DOMAIN = os.environ.get('DOMAIN')

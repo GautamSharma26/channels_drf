@@ -15,9 +15,8 @@ def total_amount_add(sender, instance, created, **kwargs):
         cart = Cart.objects.get(user=instance.cart.user)
         cart.total_amount += instance.pizza.price * int(instance.quantity)
         cart.save()
-        cart_pizza = CartPizza.objects.get(cart=cart, pizza=instance.pizza)
-        cart_pizza.total_amount += instance.pizza.price * int(instance.quantity)
-        cart_pizza.save()
+        instance.total_amount += instance.pizza.price * int(instance.quantity)
+        instance.save()
 
 
 @receiver(pre_delete, sender=CartPizza)
@@ -26,16 +25,6 @@ def total_amount_exclude(instance, **kwargs):
     cart = Cart.objects.get(user=user)
     cart.total_amount -= instance.pizza.price * instance.quantity
     cart.save()
-
-
-@shared_task
-def send_mail_func(token):
-    title = "Pizza Ordered"
-    message = "Order done"
-    # token = ['gautamkr1998@gmail.com'],
-    mail_send(message, token, title)
-
-    return "Done"
 
 
 @receiver(post_save, sender=Order)

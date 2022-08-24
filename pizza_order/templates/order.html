@@ -26,7 +26,7 @@
         }
         socket.onmessage = function(e) {
         var data = JSON.parse(e.data);
-        statusBar(data.payload.status, )
+        statusBar(data.payload.status)
         }
         socket.onclose = function(e) {
         console.log("Connection terminated");

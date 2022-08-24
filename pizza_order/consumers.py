@@ -30,6 +30,7 @@ class OrderStatus(WebsocketConsumer):
         )
 
     def receive(self, text_data=None, bytes_data=None):
+        print(f"text {text_data}")
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
@@ -40,6 +41,7 @@ class OrderStatus(WebsocketConsumer):
 
     def order_status_view(self, event):
         order = json.loads(event['value'])
+        print(f"order {order}")
         self.send(text_data=json.dumps({
             'payload': order
         })

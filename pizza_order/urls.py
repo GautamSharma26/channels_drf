@@ -14,5 +14,8 @@ urlpatterns = [
     path('order/', OrderCreate.as_view({'post': 'create', 'get': 'list'})),
     path('login/', login_request, name='login'),
     path('home/order_status/<str:order_idd>', order_status, name='order_status'),
-    path('home/', home, name='home')
+    path('home/', home, name='home'),
+    path('success/', success_payment),
+    path('cancel/', cancel_payment),
+    path('webhook/', stripe_webhook),
 ]

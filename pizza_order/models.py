@@ -78,14 +78,15 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=Status_Choice, default='Order Received')
     date = models.DateTimeField(auto_now_add=True)
     total_amount = models.IntegerField(default=0)
+    is_payed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.address} Pizza Order"
 
-    # def save(self, *args, **kwargs):
-    #     if not len(self.order_idd):
-    #         self.order_idd = random_string_generator()
-    #         super(Order, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not len(self.order_idd):
+            self.order_idd = random_string_generator()
+        super(Order, self).save(*args, **kwargs)
 
     @staticmethod
     def order_details(order_idd):
