@@ -18,4 +18,6 @@ urlpatterns = [
     path('success/', success_payment),
     path('cancel/', cancel_payment),
     path('webhook/', stripe_webhook),
+    path('order_delivered/', order_delivered, name="order-delivered"),
+    path('order_delivered/<int:id>/', order_delivered_url, name="accept_order")
 ]

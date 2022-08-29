@@ -176,7 +176,10 @@ def login_request(request):
         user = authenticate(email=email, password=password)
         if user:
             login(request, user)
-            return redirect('home')
+            if not user.is_delivery_boy:
+                return redirect('home')
+            else:
+                return redirect('order-delivered')
         else:
             return redirect('/')
     else:
@@ -230,9 +233,9 @@ def stripe_webhook(request):
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         payment_intent = stripe.checkout.Session.list(
-                payment_intent=session["payment_intent"],
-                expand=['data.line_items']
-            )
+            payment_intent=session["payment_intent"],
+            expand=['data.line_items']
+        )
         product_id = payment_intent['data'][0]['line_items']['data'][0]['price']['product']
         product = stripe.Product.retrieve(product_id)
         order_id = product['metadata']['id']
@@ -241,3 +244,23 @@ def stripe_webhook(request):
             order_obj.is_payed = True
             order_obj.save()
     return HttpResponse(status=200)
+
+
+def order_delivered(request):
+    return render(request, 'order_delivered.html')
+
+
+def order_delivered_url(request, id):
+    # DeliveryBoy.objects.create(delivery_boy=request.user,order_id=id)
+    order_data = Order.objects.filter(id=id).first()
+    delivery_boy = DeliveryBoy.objects.filter(order_id=id).first()
+    if not delivery_boy:
+        serializer = DeliveryBoySerializer(data={
+            'order_id': id
+        }, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            order_data.is_delivered = True
+            order_data.save()
+            return HttpResponse(f"Order Accepted of {request.user}")
+    return HttpResponse("Order already accepted")

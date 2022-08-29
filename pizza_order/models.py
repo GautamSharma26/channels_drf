@@ -79,19 +79,20 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     total_amount = models.IntegerField(default=0)
     is_payed = models.BooleanField(default=False)
+    is_delivered = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.address} Pizza Order"
 
     def save(self, *args, **kwargs):
-        if not len(self.order_idd):
+        if not self.order_idd:
             self.order_idd = random_string_generator()
         super(Order, self).save(*args, **kwargs)
 
     @staticmethod
     def order_details(order_idd):
         instance = Order.objects.filter(order_idd=order_idd).first()
-        data={}
+        data = {}
         data['order_idd'] = instance.order_idd
         data['status'] = instance.status
 
@@ -107,3 +108,11 @@ class OrderPizza(models.Model):
 
     def __str__(self):
         return str(self.pizza.name)
+
+
+class DeliveryBoy(models.Model):
+    delivery_boy = models.ForeignKey(User, on_delete=models.CASCADE)
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.delivery_boy.first_name

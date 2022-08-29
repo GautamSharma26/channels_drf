@@ -45,3 +45,17 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+
+class OrderSerializerSignal(serializers.ModelSerializer):
+    user = serializers.CharField(default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+class DeliveryBoySerializer(serializers.ModelSerializer):
+    delivery_boy = serializers.CharField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = DeliveryBoy
+        fields = "__all__"
+

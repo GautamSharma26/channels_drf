@@ -3,8 +3,7 @@ import json
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_delete
 from .models import *
-from celery import shared_task
-from accounts.mail import mail_send
+from .serializer import OrderSerializerSignal
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -32,12 +31,39 @@ def order_signal(sender, instance, created, **kwargs):
     if not created:
         channel_layer = get_channel_layer()
         data = {}
-        print(instance.order_idd)
         data['order_idd'] = instance.order_idd
         data['status'] = instance.status
         async_to_sync(channel_layer.group_send)(
             'order_%s' % instance.order_idd, {
                 'type': 'order_status_view',
                 'value': json.dumps(data)
+            }
+        )
+
+
+@receiver(post_save, sender=Order)
+def order_delivery(sender, instance, created, **kwargs):
+    if created:
+        serializer = OrderSerializerSignal(instance)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "all_order",
+            {
+                "type": "order_create_message",
+                "value": json.dumps([serializer.data])
+            }
+        )
+
+@receiver(post_save, sender=Order)
+def order_accepted_signal(sender, instance, created, **kwargs):
+    if not created:
+        print("not done")
+        serializer = OrderSerializerSignal(instance)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "all_order",
+            {
+                "type": "order_accepted",
+                "value": json.dumps([serializer.data])
             }
         )

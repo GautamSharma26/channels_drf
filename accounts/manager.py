@@ -7,7 +7,6 @@ from pizza import settings
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, password2=None, **other_fields):
-        print( f"other {other_fields}")
         """
         Creates and saves a User with the given email,password and extra fields which are given User model.
         """

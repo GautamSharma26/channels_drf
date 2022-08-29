@@ -29,7 +29,6 @@ django-cors-headers==3.13.0
 django-debug-toolbar==3.5.0
 django-env==0.2.1
 django-filter==21.1
-django-heroku==0.3.1
 django-phonenumber-field==6.1.0
 django-rest-passwordreset==1.2.1
 django-timezone-field==5.0
@@ -49,7 +48,6 @@ phonenumbers==8.12.50
 Pillow==9.1.1
 pluggy==1.0.0
 prompt-toolkit==3.0.30
-psycopg2==2.9.3
 psycopg2-binary==2.9.3
 py==1.11.0
 pyasn1==0.4.8
