@@ -7,17 +7,25 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-<p>{{order.user}}</p>
+<h1>{{order.user}} Order Status</h1>
 <div>
-    <span class="badge badge-primary" id="status">Primary</span>
+    <span class="badge">
+        <ul id="demo"></ul>
+    </span>
 </div>
 <script>
     var order = "{{order.order_idd}}"
-         function statusBar(status){
-                    var status_html = document.querySelector("#status");
-                    status_html.innerHTML = status;
-
+         function statusBar(status_data)
+         {
+             var pizzas = document.createElement('div');
+             pizzas.className = "border rounded p-1 my-2"
+             pizzas.innerHTML = status_data.status.id
+             pizzas.innerHTML += "<br/>" + status_data.created_at
+             pizzas.innerHTML += "<br/>" + status_data.status.status_level
+            document.getElementById("demo").appendChild(pizzas);
          }
+
+
         function connect() {
         const socket = new WebSocket("ws://" + window.location.host + "/ws/order/" + order + "/");
 
@@ -26,10 +34,18 @@
         }
         socket.onmessage = function(e) {
         var data = JSON.parse(e.data);
-        statusBar(data.payload.status)
+        console.log(data)
+        if (data.payload!== "None"){
+            for(i=0; i < data.payload.length; i++)
+            {
+                console.log(data.payload[i])
+                statusBar(data.payload[i])
+            }
         }
-        socket.onclose = function(e) {
-        console.log("Connection terminated");
+        }
+        socket.onclose = function(e)
+        {
+            console.log("Connection terminated");
         }
     }
     connect()

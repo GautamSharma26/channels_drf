@@ -15,7 +15,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'phone_no', 'password', 'password2', 'is_delivery_boy']
+        fields = ['first_name', 'last_name', 'email', 'phone_no', 'password', 'password2', 'is_delivery_boy',
+                  'is_shop_owner']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -33,32 +34,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
-
-# class DeliverBoyRegistrationSerializer(serializers.ModelSerializer):
-#     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
-#     """
-#     write_only come in use when we update and create instance.This field is not going to serialize.
-#     """
-#
-#     class Meta:
-#         model = User
-#         fields = ['first_name', 'last_name', 'email', 'phone_no', 'password', 'password2']
-#         extra_kwargs = {
-#             'password': {'write_only': True}
-#         }
-#
-#     def validate(self, data):
-#         """
-#         This method is used to validate our data which we use in this serializer class.
-#         """
-#         password = data.get('password')
-#         password2 = data.get('password2')
-#         if password != password2:
-#             raise serializers.ValidationError("Password doesn't match")
-#         return data
-#
-#     def create(self, validated_data):
-#         return User.objects.create_delivery_boy(**validated_data)
 
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=200)
