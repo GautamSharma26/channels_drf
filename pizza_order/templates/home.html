@@ -12,14 +12,16 @@
   </head>
   <body>
     <h1>Order</h1>
-     {%for od in order%}
-        <div class="card" style="width: 18rem;">
-            <ul class="list-group list-group-flush">
-            <li class="list-group-item">{{od.user}}</li>
-            <li class="list-group-item" ><a href="order_status/{{od.order_idd}}">{{od.id}}</a></li>
-            </ul>
-        </div>
-    {%endfor%}
+    <div style="width: 18rem; display: flex; flex-direction: column-reverse;">
+         {%for od in order%}
+            <div class="card">
+                <ul class="list-group">
+                <li class="list-group-item">{{od.user}}</li>
+                <li class="list-group-item" ><a href="order_status/{{od.order_idd}}">{{od.id}}</a></li>
+                </ul>
+            </div>
+        {%endfor%}
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

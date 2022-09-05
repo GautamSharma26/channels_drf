@@ -1,5 +1,7 @@
-from django.urls import path
+from django.template.backends import django
+from django.urls import path, include
 from .views import *
+from pizza import settings
 
 urlpatterns = [
     path('', PizzaAdminView.as_view({'get': 'list', 'post': 'create'})),
@@ -18,6 +20,9 @@ urlpatterns = [
     path('success/', success_payment),
     path('cancel/', cancel_payment),
     path('webhook/', stripe_webhook),
-    path('order_delivered/', order_delivered, name="order-delivered"),
-    path('order_delivered/<int:id>/', order_delivered_url, name="accept_order")
+    path('order_delivered/', order_delivered, name="order_delivered"),
+    path('order_delivered_url/<int:id>/<int:data>/', order_delivered_url, name="order_delivered_url"),
+    path('shop/', ShopCreate.as_view({'post': 'create', 'get': 'list'}), name="shop"),
+    path('shop/<int:pk>/', ShopCreate.as_view({'patch': 'partial_update', 'delete': 'destroy'}), name="shop"),
+    path('shop-owner/', shop_owner, name='shop_owner')
 ]
