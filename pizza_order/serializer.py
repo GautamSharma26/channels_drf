@@ -3,7 +3,7 @@ from .models import *
 
 
 class PizzaSerializer(serializers.ModelSerializer):
-    shop = serializers.CharField()
+    # shop = serializers.CharField()
 
     class Meta:
         model = Pizza
@@ -48,6 +48,19 @@ class OrderSerializer(serializers.ModelSerializer):
     pizza = PizzaSerializer(many=True, read_only=True)
     user = serializers.CharField(default=serializers.CurrentUserDefault())
     total_amount = serializers.IntegerField()
+    # status = serializers.CharField()
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+class OrderSerializerView(serializers.ModelSerializer):
+    pizza = PizzaSerializer(many=True, read_only=True)
+    user = serializers.CharField(default=serializers.CurrentUserDefault())
+    total_amount = serializers.IntegerField(read_only=True)
+    status = serializers.CharField(read_only=True)
+    address = serializers.CharField(read_only=True)
+    shop = serializers.CharField(read_only=True)
 
     class Meta:
         model = Order
@@ -56,7 +69,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderSerializerSignal(serializers.ModelSerializer):
     pizza = PizzaSerializer(many=True, read_only=True)
-    # pizza = serializers.CharField()
+    # address = serializers.CharField()
     user = serializers.CharField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -96,3 +109,21 @@ class StatusSerializerSignal(serializers.ModelSerializer):
     class Meta:
         model = StatusLog
         fields = "__all__"
+
+
+# class Scheduling_Serializer(serializers.ModelSerializer):
+#     # user = serializers.CharField(default=serializers.CurrentUserDefault())
+#     class Meta:
+#         model = Scheduling_Order
+#         fields = "__all__"
+
+class Scheduled_Serializer(serializers.ModelSerializer):
+    # user = serializers.CharField()
+    date = serializers.DateTimeField()
+    # id = serializers.IntegerField(read_only=True)
+    # total_amount = serializers.IntegerField()
+
+    class Meta:
+        model = Order
+        fields = "__all__"
+

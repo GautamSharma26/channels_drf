@@ -54,60 +54,81 @@ def order_signal(sender, instance, created, **kwargs):
 #         )
 
 
-
 @receiver(post_save, sender=Order)
 def order_delivery(sender, instance, created, **kwargs):
-    if created:
-        serializer = OrderSerializerSignal(instance)
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "all_order",
-            {
-                "type": "order_create_message",
-                "value": json.dumps([serializer.data])
-            }
-        )
-
-
-@receiver(post_save, sender=Order)
-def order_accepted_signal(sender, instance, created, **kwargs):
     if not created:
         serializer = OrderSerializerSignal(instance)
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "all_order",
-            {
-                "type": "order_accepted",
-                "value": json.dumps([serializer.data])
-            }
-        )
+        if serializer.data.get('status')==8:
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "all_order",
+                {
+                    "type": "order_create_message",
+                    "value": json.dumps([serializer.data])
+                }
+            )
 
 
-@receiver(post_save, sender=Order)
-def owner_order_signal(sender, instance, created, **kwargs):
-    print("not called")
-    if created:
-        print("called")
-        serializer = OrderSerializerSignal(instance)
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "owner_order",
-            {
-                "type": "owner_order_show",
-                "value": json.dumps([serializer.data])
-            }
-        )
+# @receiver(post_save, sender=Order)
+# def order_accepted_signal(sender, instance, created, **kwargs):
+#     if not created:
+#         serializer = OrderSerializerSignal(instance)
+#         channel_layer = get_channel_layer()
+#         async_to_sync(channel_layer.group_send)(
+#             "all_order",
+#             {
+#                 "type": "order_accepted",
+#                 "value": json.dumps([serializer.data])
+#             }
+#         )
 
 
 @receiver(post_save, sender=Order)
 def statusorder(sender, instance, created, **kwargs):
     if not created:
-        print(instance.status.id)
         data = {
             "order": instance.id,
             "status": instance.status.id
         }
-        print(f"d {data}")
         serializer = StatusSerializerSignal(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+
+
+# ---------------------------------------------ShopOwner----------------------------------------#
+
+
+@receiver(post_save, sender=Order)
+def order_accepted_signal(sender, instance, created, **kwargs):
+    print('data')
+    if not created:
+        print('not data')
+        serializer = OrderSerializerSignal(instance)
+        if serializer.data.get('status') == 1:
+            print('hello data')
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "owner_order",
+                {
+                    "type": "owner_order_changes",
+                    "value": json.dumps([serializer.data])
+                }
+            )
+
+
+@receiver(post_save, sender=Order)
+def owner_order_signal(sender, instance, created, **kwargs):
+    print("hii")
+    if created:
+        print("hello")
+        serializer = OrderSerializerSignal(instance)
+        print(serializer.data.get('status'))
+        if not serializer.data.get('status') == 6:
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                "owner_order",
+                {
+                    "type": "owner_order_show",
+                    "value": json.dumps([serializer.data])
+                }
+            )

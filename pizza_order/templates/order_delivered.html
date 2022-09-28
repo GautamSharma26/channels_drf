@@ -16,7 +16,7 @@
 <script>
     var current_user = "{{user.id}}"
      function orderDelivered(order_data){
-
+        var map_obj = "{{gmaps.gmaps}}"
         var div = document.createElement("div");
         div.className = 'col-3 mb-3';
         div.id = "order-card-"+order_data.id
@@ -51,7 +51,7 @@
         document.getElementById("demo").appendChild(div);
      }
      function connect() {
-        const socket = new WebSocket("ws://" + window.location.host + "/ws/order/");
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/order_delivered/" + current_user + "/");
 
         socket.onopen = function() {
             console.log("Successfully connected to the WebSocket.");

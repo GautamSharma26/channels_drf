@@ -1,6 +1,7 @@
+import datetime
 import random
 import string
-
+from django.utils import timezone
 from django.db import models
 from accounts.models import User
 from django.core.validators import MinValueValidator
@@ -17,7 +18,7 @@ class Address(models.Model):
     pincode = models.IntegerField(validators=[MinValueValidator(6)])
 
     def __str__(self):
-        return f"{self.user} {self.area}"
+        return self.area
 
 
 class Shop(models.Model):
@@ -99,7 +100,7 @@ class Order(models.Model):
     status = models.ForeignKey(Status, on_delete=models.CASCADE, default=get_default_status)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
     order_idd = models.CharField(max_length=100, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now())
     total_amount = models.IntegerField(default=0)
     is_payed = models.BooleanField(default=False)
     is_delivered = models.BooleanField(default=False)
@@ -149,3 +150,33 @@ class StatusLog(models.Model):
 
     # def __str__(self):
     #     return self.status
+
+
+# class Scheduling_Order(models.Model):
+#     order = models.IntegerField(null=True)
+#     task = models.CharField(max_length=150, null=True)
+
+
+# class Scheduled_Order(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     # pizza = models.ManyToManyField(Pizza, through="OrderPizza")
+#     address = models.ForeignKey(Address, on_delete=models.CASCADE, null=False)
+#     status = models.ForeignKey(Status, on_delete=models.CASCADE, default=get_default_status)
+#     shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+#     order_idd = models.CharField(max_length=100, blank=True)
+#     date = models.DateTimeField(null=False)
+#     total_amount = models.IntegerField(default=0)
+#     is_payed = models.BooleanField(default=False)
+#     is_delivered = models.BooleanField(default=False)
+#
+#     def save(self, *args, **kwargs):
+#         if not self.order_idd:
+#             self.order_idd = random_string_generator()
+#         super(Scheduled_Order, self).save(*args, **kwargs)
+#
+#
+
+
+class Order_Scheduled_detail(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    task = models.CharField(max_length=150)

@@ -24,5 +24,8 @@ urlpatterns = [
     path('order_delivered_url/<int:id>/<int:data>/', order_delivered_url, name="order_delivered_url"),
     path('shop/', ShopCreate.as_view({'post': 'create', 'get': 'list'}), name="shop"),
     path('shop/<int:pk>/', ShopCreate.as_view({'patch': 'partial_update', 'delete': 'destroy'}), name="shop"),
-    path('shop-owner/', shop_owner, name='shop_owner')
+    path('shop-owner/', shop_owner, name='shop_owner'),
+    path('order_accepted/<int:id>/', order_accepted_owner, name='shop_owner_order'),
+    path('celery_path/', ScheduleOrder.as_view({'post':'create'})),
+    path('celery_path/<int:pk>/', ScheduleOrder.as_view({'delete':'destroy'})),
 ]

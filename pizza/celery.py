@@ -1,7 +1,6 @@
 import os
 from celery.schedules import crontab
 from celery import Celery
-
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pizza.settings')
 
@@ -20,12 +19,12 @@ app.conf.update(timezone='Asia/Kolkata')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# app.conf.beat_schedule = {
-#     'send-mail-everyday': {
-#         'task': 'accounts.task.send_mail_func',
-#         'schedule': crontab(hour=18, minute=46),  # day_of_month,month_of_year
-#     }
-# }
+app.conf.beat_schedule = {
+    'send-mail-everyday': {
+        'task': 'did',
+        'schedule': crontab(minute=16),  # day_of_month,month_of_year
+    }
+}
 
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
